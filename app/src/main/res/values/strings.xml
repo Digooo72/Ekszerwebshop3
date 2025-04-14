@@ -69,15 +69,15 @@
     </array>
 
     <array name="shopping_item_price">
-        <item>100 Dv</item>
-        <item>150 Dv</item>
-        <item>500 Dv</item>
-        <item>300 Dv</item>
-        <item>180 Dv</item>
-        <item>70 Dv</item>
-        <item>20 Dv</item>
-        <item>30 Dv</item>
-        <item>15 Dv</item>
-        <item>90 Dv</item>
+        <item>8000 Ft</item>
+        <item>230000 Ft</item>
+        <item>150000 Ft</item>
+        <item>15000 Ft</item>
+        <item>5000 Ft</item>
+        <item>20000 Ft</item>
+        <item>200000 Ft</item>
+        <item>30000 Ft</item>
+        <item>250000 Ft</item>
+        <item>90000 Ft</item>
     </array>
 </resources>
