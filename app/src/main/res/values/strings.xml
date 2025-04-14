@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">Ekszerwebshop</string>
+    <string name="name">Név</string>
+    <string name="password">Jelszó</string>
+    <string name="login">Bejelentkezés</string>
+    <string name="registration">Regisztráció</string>
+    <string name="username">Felhasználónév</string>
+    <string name="email_address">E-mail cím</string>
+    <string name="password_again">Jelszó megerősítése</string>
+    <string name="cancel">Mégse</string>
+    <string name="bejelentkez_s_vend_gk_nt">Bejelentkezés vendégként</string>
+    <string name="bejelentkez_s_google_fi_kkal">Bejelentkezés google fiókkal</string>
+    <string name="item_placeholder">item_placeholder</string>
+    <string name="item_info_placeholder">item_info_placeholder\n</string>
+    <string name="kosarba">Kosárba</string>
+    <string name="luimerelogo">luimerelogo</string>
+
+
+    <string-array name="shopping_item_names">
+        <item>Kék szőrös füllbevaló</item>
+        <item>Gyémánt gyűrű</item>
+        <item>Smaragd nyaklánc</item>
+        <item>Szivecskés nyaklánc</item>
+        <item>Gömbös karkötő</item>
+        <item>Háromszínű gyűrű</item>
+        <item>Gyémánt füllbevaló</item>
+        <item>Fossil óra</item>
+        <item>Gyémánt nyaklánc</item>
+        <item>Fekete óra</item>
+    </string-array>
+
+    <string-array name="shopping_item_desc">
+        <item>Ez egy szőrös füllbevaló!</item>
+        <item>Ez egy gyémánt gyűrű!</item>
+        <item>Ez egy smaragd nyaklánc!</item>
+        <item>Ez egy szivecskés nyaklánc!</item>
+        <item>Ez egy gömbös karkötő!</item>
+        <item>Ez egy háromszínű gyűrű!</item>
+        <item>Ez egy gyémánt füllbevaló!</item>
+        <item>Ez egy Fossil óra!</item>
+        <item>Ez egy gyémánt nyaklánc!</item>
+        <item>Ez egy fekete óra!</item>
+    </string-array>
+
+    <array name="shopping_item_rates">
+        <item>5</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3.5</item>
+        <item>5</item>
+        <item>3</item>
+        <item>4.5</item>
+        <item>4</item>
+        <item>5</item>
+        <item>4.5</item>
+    </array>
+
+    <array name="shopping_item_images">
+        <item>@drawable/szorosfulbevalo</item>
+        <item>@drawable/gyemantgyuru</item>
+        <item>@drawable/smaragdnyaklanc</item>
+        <item>@drawable/szivecskesnyaklanc</item>
+        <item>@drawable/golyokarkoto</item>
+        <item>@drawable/bronzezustaranygyuru</item>
+        <item>@drawable/gyemantfulbevalo</item>
+        <item>@drawable/fossilora</item>
+        <item>@drawable/gyemantnyaklanc</item>
+        <item>@drawable/feketeora</item>
+    </array>
+
+    <array name="shopping_item_price">
+        <item>100 Dv</item>
+        <item>150 Dv</item>
+        <item>500 Dv</item>
+        <item>300 Dv</item>
+        <item>180 Dv</item>
+        <item>70 Dv</item>
+        <item>20 Dv</item>
+        <item>30 Dv</item>
+        <item>15 Dv</item>
+        <item>90 Dv</item>
+    </array>
+</resources>

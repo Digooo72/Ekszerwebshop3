@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "597317125120",
+    "project_id": "ekszerwebshop-78f72",
+    "storage_bucket": "ekszerwebshop-78f72.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597317125120:android:24f28755d16eb3405fc4e5",
+        "android_client_info": {
+          "package_name": "com.example.ekszerwebshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597317125120-rdp1n18pp9sppc77r7v9pupcg4ef0qer.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ekszerwebshop",
+            "certificate_hash": "51bf0d2c476f67cb04485d09acb0379955588a06"
+          }
+        },
+        {
+          "client_id": "597317125120-eta7edksdncn1q52fctlcger4a495f65.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsaDQBbUeeQu2fg8e21V5BI0SlrCQjzzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597317125120-eta7edksdncn1q52fctlcger4a495f65.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
