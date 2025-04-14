@@ -76,4 +76,5 @@ dependencies {
     implementation ("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation ("com.github.bumptech.glide:glide:3.7.0")
     implementation ("androidx.cardview:cardview:1.0.0")
+    implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }
