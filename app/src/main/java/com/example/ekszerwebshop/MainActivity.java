@@ -9,8 +9,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -80,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         LoaderManager.getInstance(this).restartLoader(0, null, this);
 
-
+        ImageView logo = findViewById(R.id.logoImage);
+        Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+        logo.startAnimation(pulse);
 
         Log.i(LOG_TAG,"onCreate");
     }

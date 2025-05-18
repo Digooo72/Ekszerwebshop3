@@ -17,7 +17,7 @@ public class RandomAsyncTask extends AsyncTask<Void,Void,String> {
     protected String doInBackground(Void... voids) {
         Random random = new Random();
         int number = random.nextInt(11);
-        int ms = number * 301;
+        int ms = number * 501;
 
         try {
             Thread.sleep(ms);
@@ -25,7 +25,7 @@ public class RandomAsyncTask extends AsyncTask<Void,Void,String> {
             e.printStackTrace();
         }
 
-        return "Bejelentkezés vendégként" + ms + " ms után!";
+        return "Bejelentkezés vendégként";
     }
 
     @Override
