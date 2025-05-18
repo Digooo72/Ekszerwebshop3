@@ -5,7 +5,7 @@ public class ShoppingItem {
     private String info;
     private String price;
     private float ratedInfo;
-    private   int imageResource;
+    private  int imageResource;
     private int cartedCount;
     private String id;
 

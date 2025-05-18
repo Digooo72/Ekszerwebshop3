@@ -201,6 +201,7 @@ public class ShopListActivity extends AppCompatActivity {
 
 
 
+
         itemsImageResource.recycle();
 
 
@@ -277,7 +278,8 @@ public class ShopListActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.cart) {
             Log.d(LOG_TAG,"Cart clicked");
-
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.view_selector) {
             Log.d(LOG_TAG,"View selector clicked");
@@ -289,7 +291,7 @@ public class ShopListActivity extends AppCompatActivity {
             }
 
             return true;
-        } else {
+    } else {
             return super.onOptionsItemSelected(item);
         }
 
@@ -343,6 +345,19 @@ public class ShopListActivity extends AppCompatActivity {
                 });
 
 
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            FirebaseFirestore.getInstance()
+                    .collection("kosarak")
+                    .document(uid)
+                    .collection("termekek")
+                    .document(item._getId())
+                    .set(item)
+                    .addOnSuccessListener(unused -> Log.d(LOG_TAG, "Kosárhoz hozzáadva: " + item.getName()))
+                    .addOnFailureListener(e -> Log.e(LOG_TAG, "Hiba a kosárhoz adáskor", e));
+        }
+
         mNotificationHandler.send(item.getName());
 
         queryData();
@@ -393,6 +408,8 @@ public class ShopListActivity extends AppCompatActivity {
 
         //mJobScheduler.cancel(0);
     }
+
+
 
 
 }

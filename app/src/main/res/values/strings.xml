@@ -15,6 +15,9 @@
     <string name="kosarba">Kosárba</string>
     <string name="luimerelogo">luimerelogo</string>
     <string name="torles">Törlés</string>
+    <string name="kosar">Kosar</string>
+    <string name="term_k_neve">Termék neve</string>
+    <string name="ar">Ár</string>
 
     <string-array name="shopping_item_names">
         <item>Kék szőrös füllbevaló</item>
