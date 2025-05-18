@@ -1,10 +1,15 @@
 package com.example.ekszerwebshop;
 
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+
 import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,7 +32,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class MainActivity extends AppCompatActivity {
+
+
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     private static final String LOG_TAG = MainActivity.class.getName();
     private static final int SECRET_KEY = 99;
@@ -60,10 +68,21 @@ public class MainActivity extends AppCompatActivity {
          preferences = getSharedPreferences(PREF_KEY, MODE_PRIVATE);
          mAuth = FirebaseAuth.getInstance();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
         mGoogleSingInClient = GoogleSignIn.getClient(this, gso);
 
-            Log.i(LOG_TAG,"onCreate");
+//        Button button = findViewById(R.id.guestLoginButton);
+//         new RandomAsyncTask(button).execute();
+
+
+        LoaderManager.getInstance(this).restartLoader(0, null, this);
+
+
+
+        Log.i(LOG_TAG,"onCreate");
     }
 
     @Override
@@ -202,4 +221,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public Loader<String> onCreateLoader(int id, Bundle args) {
+        return new RandomAsyncLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String data) {
+        Button button = findViewById(R.id.guestLoginButton);
+        button.setText(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {}
 }

@@ -21,9 +21,9 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapter.ViewHolder> implements Filterable {
-    private ArrayList<ShoppingItem> mShoppingItemsdata;
-    private ArrayList<ShoppingItem> mShoppingItemsDataAll;
-    private Context mContext;
+    public ArrayList<ShoppingItem> mShoppingItemsdata;
+    public ArrayList<ShoppingItem> mShoppingItemsDataAll;
+    public Context mContext;
     private int lastPosition = -1;
 
     ShoppingItemAdapter(Context context, ArrayList<ShoppingItem> itemsData){
@@ -60,7 +60,7 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     public Filter getFilter() {
         return shoppingFilter;
     }
-    private Filter shoppingFilter = new Filter() {
+    public Filter shoppingFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             ArrayList<ShoppingItem> filteredList = new ArrayList<>();
@@ -93,11 +93,11 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView mTitleText;
-        private TextView mInfoText;
-        private TextView mPriceText;
-        private ImageView mItemImage;
-        private RatingBar mRatingBar;
+        public TextView mTitleText;
+        public TextView mInfoText;
+        public TextView mPriceText;
+        public ImageView mItemImage;
+        public RatingBar mRatingBar;
         public ViewHolder( View itemView) {
             super(itemView);
 
@@ -108,16 +108,7 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
              mRatingBar = itemView.findViewById(R.id.ratingBar);
 
 
-             itemView.findViewById(R.id.add_to_cart).setOnClickListener(new View.OnClickListener(){
 
-                 @Override
-                 public void onClick(View v) {
-
-                     Log.d("Activity", "Add cart button clicked!");
-                     ((ShopListActivity)mContext).updateAlertIcon();
-
-                 }
-             });
         }
 
         public void bindTo(ShoppingItem currentItem) {
@@ -130,6 +121,9 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
 
             Glide.with(mContext).load(currentItem.getImageResource()).into(mItemImage);
 
+            itemView.findViewById(R.id.add_to_cart).setOnClickListener(view -> ((ShopListActivity)mContext).updateAlertIcon(currentItem));
+
+            itemView.findViewById(R.id.delete).setOnClickListener(view -> ((ShopListActivity)mContext).deleteItem(currentItem));
         }
     }
 

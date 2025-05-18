@@ -1,7 +1,19 @@
 package com.example.ekszerwebshop;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,16 +21,26 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -28,6 +50,7 @@ import static android.view.View.VISIBLE;
 import java.util.ArrayList;
 
 public class ShopListActivity extends AppCompatActivity {
+
     private static final String LOG_TAG = ShopListActivity.class.getName();
     private FirebaseUser user;
     private FirebaseAuth mAuth;
@@ -39,8 +62,20 @@ public class ShopListActivity extends AppCompatActivity {
     private boolean viewRow = true;
     private int cartItems = 0;
 
+    private NotificationHandler mNotificationHandler;
+
    private FrameLayout redCircle;
    private TextView contentTextView ;
+
+   private FirebaseFirestore mFirestore;
+
+   private CollectionReference mItems;
+
+   private int queryLimit = 10;
+
+   private AlarmManager mAlarmManager;
+   private JobScheduler mJobScheduler;
+
 
 
     @Override
@@ -58,6 +93,7 @@ public class ShopListActivity extends AppCompatActivity {
             finish();
         }
 
+
         mRecycleView = findViewById(R.id.recyclerView);
         mRecycleView.setLayoutManager(new GridLayoutManager(this, gridNumber));
         mItemList = new ArrayList<>();
@@ -66,8 +102,85 @@ public class ShopListActivity extends AppCompatActivity {
 
         mRecycleView.setAdapter(mAdapter);
 
-        initializeData();
+        mFirestore = FirebaseFirestore.getInstance();
+        mItems = mFirestore.collection("Items");
+
+        queryData();
+
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        this.registerReceiver(powerReciever,filter);
+
+        mNotificationHandler = new NotificationHandler(this);
+        mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        setAlarmManager();
+        requestNotificationPermission();
+
+        mJobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        setJobScheduler();
+
     }
+
+    BroadcastReceiver powerReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (action == null) {
+
+                return;
+            }
+            switch(action){
+                case Intent.ACTION_POWER_CONNECTED:
+                    queryLimit = 10;
+                    break;
+                case Intent.ACTION_POWER_DISCONNECTED:
+                    queryLimit = 5;
+                    break;
+            }
+            queryData();
+        }
+    };
+
+    private void queryData(){
+        mItemList.clear();
+
+        //mItems.whereEqualTo()
+        mItems.orderBy("cartedCount",Query.Direction.DESCENDING).limit(queryLimit).get().addOnSuccessListener(queryDocumentSnapshots ->  {
+           for (QueryDocumentSnapshot document : queryDocumentSnapshots){
+               ShoppingItem item = document.toObject(ShoppingItem.class);
+               item.setId(document.getId());
+               mItemList.add(item);
+           }
+           if(mItemList.size()== 0){
+               initializeData();
+               queryData();
+           }
+            mAdapter.notifyDataSetChanged();
+        });
+
+
+
+    }
+
+
+    public void deleteItem(ShoppingItem item){
+        DocumentReference ref = mItems.document(item._getId());
+
+        ref.delete().addOnSuccessListener(success ->{
+            Log.d(LOG_TAG, "Item is succesfully deleted: " + item._getId());
+        }).addOnFailureListener(failure ->{
+            Toast.makeText(this, "Item " + item._getId() + "cannot be deleted", Toast.LENGTH_LONG).show();
+        });
+
+        queryData();
+        mNotificationHandler.cancel();
+
+    }
+
+
 
     private void initializeData() {
         String[] itemsList = getResources().getStringArray(R.array.shopping_item_names);
@@ -76,14 +189,21 @@ public class ShopListActivity extends AppCompatActivity {
         TypedArray itemsImageResource = getResources().obtainTypedArray(R.array.shopping_item_images);
         TypedArray itemsRate = getResources().obtainTypedArray(R.array.shopping_item_rates);
 
-        mItemList.clear();
+
+
+
         for (int i = 0; i < itemsList.length; i++) {
-            mItemList.add(new ShoppingItem(itemsList[i],itemsInfo[i],itemsPrice[i], itemsRate.getFloat(i,0), itemsImageResource.getResourceId(i, 0)));
-            
+
+            mItems.add(new ShoppingItem(itemsList[i],itemsInfo[i],itemsPrice[i], itemsRate.getFloat(i,0), itemsImageResource.getResourceId(i, 0), 0));
+
         }
+
+
+
+
         itemsImageResource.recycle();
 
-        mAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -173,6 +293,8 @@ public class ShopListActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
 
+
+
     }
 
 
@@ -205,7 +327,7 @@ public class ShopListActivity extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
-    public void updateAlertIcon(){
+    public void updateAlertIcon(ShoppingItem item){
         cartItems = (cartItems + 1);
         if(0 < cartItems){
             contentTextView.setText(String.valueOf(cartItems));
@@ -214,6 +336,62 @@ public class ShopListActivity extends AppCompatActivity {
             contentTextView.setText("");
         }
         redCircle.setVisibility((cartItems > 0) ? VISIBLE : GONE);
+
+        mItems.document(item._getId()).update("cartedCount", item.getCartedCount()+1)
+                .addOnFailureListener(failure->{
+                    Toast.makeText(this, "Item " + item._getId() + "cannot be changed", Toast.LENGTH_LONG).show();
+                });
+
+
+        mNotificationHandler.send(item.getName());
+
+        queryData();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(powerReciever);
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
+    }
+
+    private void setAlarmManager(){
+        //long repeateinterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+        long repeateinterval = 60*100;
+        long triggerTime = SystemClock.elapsedRealtime()+repeateinterval;
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                triggerTime,
+                repeateinterval,
+                pendingIntent);
+
+        //mAlarmManager.cancel(pendingIntent);
+    }
+
+    private void setJobScheduler(){
+        int networkType = JobInfo.NETWORK_TYPE_UNMETERED;
+        int hardDeadLine = 5000;
+
+        ComponentName name = new ComponentName(getPackageName(), NotificationJobService.class.getName());
+        JobInfo.Builder builder = new JobInfo.Builder(0,name)
+                .setRequiredNetworkType(networkType)
+                .setRequiresCharging(true)
+                .setOverrideDeadline(hardDeadLine);
+
+        mJobScheduler.schedule(builder.build());
+
+        //mJobScheduler.cancel(0);
     }
 
 

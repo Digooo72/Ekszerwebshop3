@@ -89,7 +89,7 @@
         android:layout_marginTop="12dp"
         android:backgroundTint="#A88ECA"
         android:onClick="loginAsGuest"
-        android:text="@string/bejelentkez_s_vend_gk_nt"
+        android:text=":)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
